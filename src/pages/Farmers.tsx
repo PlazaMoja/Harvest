@@ -5,19 +5,21 @@ import { Button } from '../components/ui/Button';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { Alert } from '../components/ui/Alert';
 import { farmersApi } from '../lib/api';
+import { demoFarmers } from '../lib/demo-data';
 import { FarmerResponse } from '../types/api';
 import { Plus, Users, Phone, MapPin, Languages } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-export function Farmers() {
-  const [farmers, setFarmers] = useState<FarmerResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+
+export function Farmers({ demoMode }: { demoMode?: boolean }) {
+  const [farmers, setFarmers] = useState<FarmerResponse[]>(demoMode ? demoFarmers : []);
+  const [loading, setLoading] = useState(!demoMode);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadFarmers();
-  }, []);
+    if (!demoMode) loadFarmers();
+  }, [demoMode]);
 
   const loadFarmers = async () => {
     try {

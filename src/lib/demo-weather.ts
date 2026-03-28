@@ -1,0 +1,42 @@
+export const demoWeatherByProvince = [
+  {
+    province: 'Gauteng',
+    temperatureC: 23,
+    rainfallMm: 2,
+    humidityPercent: 60,
+    windSpeedKmh: 12,
+    updated: '2026-03-28',
+  },
+  {
+    province: 'KwaZulu-Natal',
+    temperatureC: 27,
+    rainfallMm: 8,
+    humidityPercent: 75,
+    windSpeedKmh: 9,
+    updated: '2026-03-28',
+  },
+  {
+    province: 'Western Cape',
+    temperatureC: 19,
+    rainfallMm: 0,
+    humidityPercent: 55,
+    windSpeedKmh: 20,
+    updated: '2026-03-28',
+  },
+  {
+    province: 'Free State',
+    temperatureC: 21,
+    rainfallMm: 1,
+    humidityPercent: 50,
+    windSpeedKmh: 15,
+    updated: '2026-03-28',
+  },
+  {
+    province: 'Eastern Cape',
+    temperatureC: 22,
+    rainfallMm: 3,
+    humidityPercent: 65,
+    windSpeedKmh: 10,
+    updated: '2026-03-28',
+  },
+];

@@ -7,13 +7,15 @@ import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 import { Alert } from '../components/ui/Alert';
 import { Badge } from '../components/ui/Badge';
 import { farmsApi, soilDataApi, weatherDataApi } from '../lib/api';
+import { demoWeatherByProvince } from '../lib/demo-weather';
 import { FarmResponse, SoilDataResponse, WeatherDataResponse } from '../types/api';
 import { Database, Download, CheckCircle, XCircle, RefreshCw, Droplets, Mountain } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export function DataSync() {
+export function DataSync({ demoMode }: { demoMode?: boolean }) {
   const [farms, setFarms] = useState<FarmResponse[]>([]);
   const [selectedFarmId, setSelectedFarmId] = useState<number | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<string>('Gauteng');
   const [soilData, setSoilData] = useState<SoilDataResponse[]>([]);
   const [weatherData, setWeatherData] = useState<WeatherDataResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,14 +25,14 @@ export function DataSync() {
   const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    loadFarms();
-  }, []);
+    if (!demoMode) loadFarms();
+  }, [demoMode]);
 
   useEffect(() => {
-    if (selectedFarmId) {
+    if (!demoMode && selectedFarmId) {
       loadData();
     }
-  }, [selectedFarmId]);
+  }, [selectedFarmId, demoMode]);
 
   const loadFarms = async () => {
     try {
@@ -107,12 +109,49 @@ export function DataSync() {
     }
   };
 
+
   const selectedFarm = farms.find(f => f.farmId === selectedFarmId);
   const farmOptions = farms.map(farm => ({
     value: farm.farmId,
     label: `${farm.location} - ${farm.farmer.name}`,
   }));
 
+  // DEMO MODE: Province weather
+  const demoWeather = demoWeatherByProvince.find(w => w.province === selectedProvince);
+
+  if (demoMode) {
+    return (
+      <PageLayout
+        title="Weather by Province (Demo)"
+        subtitle="View demo temperature, rainfall, humidity, and wind by province"
+      >
+        <div className="mb-6">
+          <label className="block mb-2 font-medium">Select Province</label>
+          <select
+            className="input"
+            value={selectedProvince}
+            onChange={e => setSelectedProvince(e.target.value)}
+          >
+            {demoWeatherByProvince.map(w => (
+              <option key={w.province} value={w.province}>{w.province}</option>
+            ))}
+          </select>
+        </div>
+        {demoWeather && (
+          <div className="bg-white/80 rounded-xl shadow-lg p-6 max-w-md mx-auto">
+            <h2 className="text-xl font-semibold mb-2">{demoWeather.province}</h2>
+            <div className="flex flex-col gap-1 text-gray-700">
+              <span>🌡️ Temperature: <b>{demoWeather.temperatureC}°C</b></span>
+              <span>🌧️ Rainfall: <b>{demoWeather.rainfallMm} mm</b></span>
+              <span>💧 Humidity: <b>{demoWeather.humidityPercent}%</b></span>
+              <span>💨 Wind: <b>{demoWeather.windSpeedKmh} km/h</b></span>
+              <span className="text-xs text-gray-400 mt-2">Updated: {demoWeather.updated}</span>
+            </div>
+          </div>
+        )}
+      </PageLayout>
+    );
+  }
   return (
     <PageLayout
       title="Data Sync"

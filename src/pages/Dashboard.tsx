@@ -91,8 +91,9 @@ export function Dashboard() {
         )
       }
     >
+      {/* Always show error alert if error exists */}
       {error && (
-        <Alert variant="info" className="mb-6">
+        <Alert variant="error" className="mb-6">
           {error}
         </Alert>
       )}
